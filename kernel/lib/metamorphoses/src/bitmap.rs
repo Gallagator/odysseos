@@ -99,7 +99,7 @@ impl<'a> Bitmap<'a> {
 }
 
 impl BitmapRange {
-    fn new(start: usize, end: usize) -> Self {
+    pub fn new(start: usize, end: usize) -> Self {
         Self { start, end }
     }
 }

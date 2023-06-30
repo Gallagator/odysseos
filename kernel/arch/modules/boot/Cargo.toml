@@ -1,9 +1,10 @@
 [package]
-name = "dev"
+name = "kernel-boot"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-metamorphoses = {path = "../"}
+[target.'cfg(target_arch = "x86_64")'.dependencies]
+kernel-boot-impl = { path = "../../x86_64/boot" }

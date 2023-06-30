@@ -4,10 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-limine = "0.1.10"
 spin = "0.9"
 metamorphoses = {path = "lib/metamorphoses/"}
+kernel-cpu = {path = "arch/modules/cpu"}
+kernel-boot = {path = "arch/modules/boot"}
+kernel-boot-interface = {path = "lib/kernel-boot-interface"}
 
 [profile.dev]
 opt-level = 3
 lto = "fat"
+
+[build-dependencies]
+kernel-build = { path = "arch/modules/build" }

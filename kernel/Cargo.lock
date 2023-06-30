@@ -9,10 +9,62 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
-name = "limine"
-version = "0.1.10"
+name = "kernel-boot"
+version = "0.1.0"
+dependencies = [
+ "kernel-boot-impl",
+]
+
+[[package]]
+name = "kernel-boot-impl"
+version = "0.1.0"
+dependencies = [
+ "kernel-boot-interface",
+ "kernel-cpu",
+ "lazy_static",
+ "limine",
+]
+
+[[package]]
+name = "kernel-boot-interface"
+version = "0.1.0"
+
+[[package]]
+name = "kernel-build"
+version = "0.1.0"
+dependencies = [
+ "kernel-build-impl",
+]
+
+[[package]]
+name = "kernel-build-impl"
+version = "0.1.0"
+
+[[package]]
+name = "kernel-cpu"
+version = "0.1.0"
+dependencies = [
+ "kernel-cpu-impl",
+]
+
+[[package]]
+name = "kernel-cpu-impl"
+version = "0.1.0"
+
+[[package]]
+name = "lazy_static"
+version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e9d0c951056ac044f0e6b09448b9d702f8fb1001db89cffd2bc467bd1c25307"
+checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
+dependencies = [
+ "spin 0.5.2",
+]
+
+[[package]]
+name = "limine"
+version = "0.1.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f45c67c512034e8eb0064556e1db5da671b3ef50791cd6ac6376e7aefc0ef27e"
 
 [[package]]
 name = "lock_api"
@@ -32,9 +84,12 @@ version = "0.1.0"
 name = "odysseos"
 version = "0.1.0"
 dependencies = [
- "limine",
+ "kernel-boot",
+ "kernel-boot-interface",
+ "kernel-build",
+ "kernel-cpu",
  "metamorphoses",
- "spin",
+ "spin 0.9.8",
 ]
 
 [[package]]
@@ -42,6 +97,12 @@ name = "scopeguard"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d29ab0c6d3fc0ee92fe66e2d99f700eab17a8d57d1c1d3b748380fb20baa78cd"
+
+[[package]]
+name = "spin"
+version = "0.5.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
 
 [[package]]
 name = "spin"

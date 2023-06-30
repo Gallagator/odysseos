@@ -1,54 +1,27 @@
 #![no_std]
 #![no_main]
 
-use core::arch::asm;
+use kernel_boot;
+use kernel_boot_interface;
+use kernel_cpu;
 
-use limine::LimineFramebufferRequest;
-
-static FRAMEBUFFER_REQUEST: LimineFramebufferRequest = LimineFramebufferRequest::new(0);
+unsafe fn put_white(x: u64, y: u64, binfo: &kernel_boot_interface::BootInfo) {
+    let ptr = (binfo.frame_buffer.phys_address + binfo.hhdm.base) as *mut u8;
+    let offset = y * binfo.frame_buffer.pitch + x * 4;
+    *(ptr.offset(offset as isize) as *mut u32) = 0xffff_ffff;
+}
 
 #[no_mangle]
-unsafe extern "C" fn _start() -> ! {
+pub unsafe extern "C" fn _start() -> ! {
+    let boot_info = kernel_boot::arch_init();
     // Ensure we got a framebuffer.
-    if let Some(framebuffer_response) = FRAMEBUFFER_REQUEST.get_response().get() {
-        if framebuffer_response.framebuffer_count < 1 {
-            hcf();
-        }
-
-        // Get the first framebuffer's information.
-        let framebuffer = &framebuffer_response.framebuffers()[0];
-
-        for i in 0..100_usize {
-            // Calculate the pixel offset using the framebuffer information we obtained above.
-            // We skip `i` scanlines (pitch is provided in bytes) and add `i * 4` to skip `i` pixels forward.
-            let pixel_offset = i * framebuffer.pitch as usize + i * 4;
-
-            // Write 0xFFFFFFFF to the provided pixel offset to fill it white.
-            // We can safely unwrap the result of `as_ptr()` because the framebuffer address is
-            // guaranteed to be provided by the bootloader.
-            unsafe {
-                *(framebuffer
-                    .address
-                    .as_ptr()
-                    .unwrap()
-                    .offset(pixel_offset as isize) as *mut u32) = 0xFFFFFFFF;
-            }
-        }
+    for i in 0..100 {
+        put_white(i, i, &boot_info);
     }
-
-    hcf();
+    kernel_cpu::hcf();
 }
 
 #[panic_handler]
 fn rust_panic(_info: &core::panic::PanicInfo) -> ! {
-    hcf();
-}
-
-fn hcf() -> ! {
-    unsafe {
-        asm!("cli");
-        loop {
-            asm!("hlt");
-        }
-    }
+    kernel_cpu::hcf();
 }

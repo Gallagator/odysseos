@@ -1,2 +1,2 @@
 #![no_std]
-mod bitmap;
+pub mod bitmap;
