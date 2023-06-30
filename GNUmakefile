@@ -25,6 +25,10 @@ run-hdd: $(IMAGE_NAME).hdd
 run-hdd-uefi: ovmf $(IMAGE_NAME).hdd
 	qemu-system-x86_64 -M q35 -m 2G -bios ovmf/OVMF.fd -hda $(IMAGE_NAME).hdd
 
+.PHONY: debug
+debug: $(IMAGE_NAME).iso
+	qemu-system-x86_64 -S -s -M q35 -m 2G -cdrom $(IMAGE_NAME).iso -boot d
+
 ovmf:
 	mkdir -p ovmf
 	cd ovmf && curl -Lo OVMF-X64.zip https://efi.akeo.ie/OVMF/OVMF-X64.zip && unzip OVMF-X64.zip

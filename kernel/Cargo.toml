@@ -1,11 +1,13 @@
 [package]
-name = "limine-rust-barebones"
+name = "odysseos"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 limine = "0.1.10"
 spin = "0.9"
+metamorphoses = {path = "lib/metamorphoses/"}
 
 [profile.dev]
 opt-level = 3
+lto = "fat"

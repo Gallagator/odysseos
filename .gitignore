@@ -2,3 +2,6 @@
 /ovmf-x64
 *.iso
 *.hdd
+
+target
+*.kdl

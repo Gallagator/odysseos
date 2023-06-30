@@ -27,7 +27,11 @@ unsafe extern "C" fn _start() -> ! {
             // We can safely unwrap the result of `as_ptr()` because the framebuffer address is
             // guaranteed to be provided by the bootloader.
             unsafe {
-                *(framebuffer.address.as_ptr().unwrap().offset(pixel_offset as isize) as *mut u32) = 0xFFFFFFFF;
+                *(framebuffer
+                    .address
+                    .as_ptr()
+                    .unwrap()
+                    .offset(pixel_offset as isize) as *mut u32) = 0xFFFFFFFF;
             }
         }
     }

@@ -15,14 +15,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e9d0c951056ac044f0e6b09448b9d702f8fb1001db89cffd2bc467bd1c25307"
 
 [[package]]
-name = "limine-rust-barebones"
-version = "0.1.0"
-dependencies = [
- "limine",
- "spin",
-]
-
-[[package]]
 name = "lock_api"
 version = "0.4.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -30,6 +22,19 @@ checksum = "435011366fe56583b16cf956f9df0095b405b82d76425bc8981c0e22e60ec4df"
 dependencies = [
  "autocfg",
  "scopeguard",
+]
+
+[[package]]
+name = "metamorphoses"
+version = "0.1.0"
+
+[[package]]
+name = "odysseos"
+version = "0.1.0"
+dependencies = [
+ "limine",
+ "metamorphoses",
+ "spin",
 ]
 
 [[package]]
