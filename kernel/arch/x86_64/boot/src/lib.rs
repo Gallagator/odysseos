@@ -32,10 +32,10 @@ fn retrieve_boot_info() -> BootInfo {
     }
 }
 
-fn get_memmap() -> memmap::Entries {
+fn get_memmap() -> memmap::Memmap {
     if let Some(memmap_response) = MEMMAP_REQUEST.get_response().get() {
         debug_assert!(memmap_response.entry_count <= memmap::MAX_MEM_REGIONS as u64);
-        let mut memmap: memmap::Entries = unsafe { core::mem::zeroed() };
+        let mut memmap: memmap::Memmap = unsafe { core::mem::zeroed() };
         memmap.entry_count = memmap_response.entry_count as usize;
 
         memmap_response
@@ -43,7 +43,7 @@ fn get_memmap() -> memmap::Entries {
             .iter()
             .map(|entry| convert_memmap_entry(entry))
             .enumerate()
-            .for_each(|(i, e)| memmap.regions[i] = e);
+            .for_each(|(i, e)| memmap.entries[i] = e);
         memmap
     } else {
         panic!("No memmap response from limine.");
@@ -75,7 +75,7 @@ fn get_hhdm() -> hhdm::BootHhdm {
     }
 }
 
-fn convert_memmap_entry(entry: &limine::MemmapEntry) -> memmap::Entry {
+fn convert_memmap_entry(entry: &limine::MemmapEntry) -> memmap::MemmapEntry {
     let typ = match entry.typ {
         limine::MemoryMapEntryType::Usable => memmap::MemType::Usable,
         limine::MemoryMapEntryType::Reserved => memmap::MemType::Reserved,
@@ -87,9 +87,9 @@ fn convert_memmap_entry(entry: &limine::MemmapEntry) -> memmap::Entry {
         limine::MemoryMapEntryType::Framebuffer => memmap::MemType::Reserved,
     };
 
-    memmap::Entry {
-        base: entry.base,
-        len: entry.len,
+    memmap::MemmapEntry {
+        base: entry.base as usize,
+        len: entry.len as usize,
         typ,
     }
 }

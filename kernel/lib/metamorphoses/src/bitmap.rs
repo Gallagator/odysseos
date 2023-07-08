@@ -1,8 +1,9 @@
-const WORD_SIZE: usize = core::mem::size_of::<u64>();
-const WORD_SIZE_BITS: usize = WORD_SIZE * 8;
+pub const WORD_SIZE: usize = core::mem::size_of::<u64>();
+pub const WORD_SIZE_BITS: usize = WORD_SIZE * 8;
 
 pub struct Bitmap<'a> {
     bits: &'a mut [u64],
+    len: usize,
 }
 
 /// Represents the bitmap with a range that can act on it
@@ -13,11 +14,17 @@ pub struct BitmapRange {
 }
 
 impl<'a> Bitmap<'a> {
-    pub fn new(bits: &'a mut [u64]) -> Self {
+    /// LEN is passed in bits
+    pub fn new(bits: &'a mut [u64], len: usize) -> Self {
+        debug_assert!(len <= bits.len() * WORD_SIZE_BITS);
         bits.fill(0);
-        Self { bits }
+        Self { bits, len }
     }
 
+    pub fn fill(&mut self, is_set: bool) {
+        let value = if is_set { 1 } else { 0 };
+        self.bits.fill(value);
+    }
     /// Gets bit at idx
     pub fn get(&self, idx: usize) -> bool {
         (self.bits[idx / WORD_SIZE_BITS] & (1u64 << (idx % WORD_SIZE_BITS))) > 0
@@ -34,7 +41,7 @@ impl<'a> Bitmap<'a> {
     }
 
     pub fn len(&self) -> usize {
-        return self.bits.len() * WORD_SIZE_BITS;
+        return self.len;
     }
 
     /// Returns a BitmapRange for the first range that can be flipped
@@ -68,6 +75,7 @@ impl<'a> Bitmap<'a> {
     pub fn flip_range(&mut self, range: &BitmapRange) {
         debug_assert!(range.start < self.len());
         debug_assert!(range.end <= self.len());
+        debug_assert!(self.all_same(range));
 
         let start_idx = range.start / WORD_SIZE_BITS;
         let end_idx = range.end / WORD_SIZE_BITS;
@@ -88,12 +96,21 @@ impl<'a> Bitmap<'a> {
         }
     }
 
-    pub fn find_and_flip(&mut self, size: usize, is_set: bool) -> bool {
+    pub fn find_and_flip(&mut self, size: usize, is_set: bool) -> Option<usize> {
         if let Some(range) = self.find_first_fit(size, is_set) {
             self.flip_range(&range);
-            true
+            Some(range.start)
         } else {
-            false
+            None
+        }
+    }
+
+    fn all_same(&self, range: &BitmapRange) -> bool {
+        let mut bits = (range.start..range.end).map(|idx| self.get(idx));
+        if let Some(first) = bits.next() {
+            bits.all(|bit| bit == first)
+        } else {
+            true
         }
     }
 }
@@ -111,17 +128,17 @@ mod tests {
     #[test]
     fn alloc_one() {
         let mut buf = [0u64; 10];
-        let mut bmap = Bitmap::new(&mut buf);
-        assert_eq!(bmap.find_and_flip(1, false), true);
+        let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
+        assert_eq!(bmap.find_and_flip(1, false), Some(0));
         assert_eq!(bmap.get(0), true);
     }
 
     #[test]
     fn alloc_two() {
         let mut buf = [0u64; 10];
-        let mut bmap = Bitmap::new(&mut buf);
-        assert_eq!(bmap.find_and_flip(1, false), true);
-        assert_eq!(bmap.find_and_flip(1, false), true);
+        let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
+        assert_eq!(bmap.find_and_flip(1, false), Some(0));
+        assert_eq!(bmap.find_and_flip(1, false), Some(1));
         assert_eq!(bmap.get(0), true);
         assert_eq!(bmap.get(1), true);
     }
@@ -129,9 +146,9 @@ mod tests {
     #[test]
     fn alloc_all() {
         let mut buf = [0u64; 10];
-        let mut bmap = Bitmap::new(&mut buf);
-        for _ in 0..(bmap.len()) {
-            assert_eq!(bmap.find_and_flip(1, false), true);
+        let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
+        for i in 0..(bmap.len()) {
+            assert_eq!(bmap.find_and_flip(1, false), Some(i));
         }
         for i in 0..(bmap.len()) {
             assert_eq!(bmap.get(i), true);
@@ -141,8 +158,8 @@ mod tests {
     #[test]
     fn alloc_big() {
         let mut buf = [0u64; 10];
-        let mut bmap = Bitmap::new(&mut buf);
-        assert_eq!(bmap.find_and_flip(64 * 10, false), true);
+        let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
+        assert_eq!(bmap.find_and_flip(64 * 10, false), Some(0));
         assert_eq!(bmap.len(), 64 * 10);
         for i in 0..(bmap.len()) {
             assert_eq!(bmap.get(i), true);
@@ -159,6 +176,6 @@ mod tests {
             assert_eq!(bmap.get(i), true);
         }
 
-        assert_eq!(bmap.find_and_flip(53, false), false);
+        assert_eq!(bmap.find_and_flip(53, false), None);
     }
 }

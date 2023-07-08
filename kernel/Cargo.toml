@@ -5,13 +5,17 @@ edition = "2021"
 
 [dependencies]
 spin = "0.9"
+
 metamorphoses = {path = "lib/metamorphoses/"}
 kernel-cpu = {path = "arch/modules/cpu"}
 kernel-boot = {path = "arch/modules/boot"}
+kernel-paging = {path = "arch/modules/paging"}
 kernel-boot-interface = {path = "lib/kernel-boot-interface"}
 
 [profile.dev]
 opt-level = 3
+
+[profile.release]
 lto = "fat"
 
 [build-dependencies]

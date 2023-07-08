@@ -1,5 +1,6 @@
 pub const MAX_MEM_REGIONS: usize = 256;
 
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub enum MemType {
     Usable,
     Reserved,
@@ -8,15 +9,28 @@ pub enum MemType {
     BootloaderReclaimable,
 }
 
-pub struct Entry {
-    pub base: u64,
-    pub len: u64,
+#[derive(Clone, Copy)]
+pub struct MemmapEntry {
+    pub base: usize,
+    pub len: usize,
     pub typ: MemType,
 }
 
-pub struct Entries {
-    pub regions: [Entry; MAX_MEM_REGIONS],
+pub struct Memmap {
+    pub entries: [MemmapEntry; MAX_MEM_REGIONS],
     pub entry_count: usize,
+}
+
+impl MemmapEntry {
+    pub fn end(&self) -> usize {
+        self.base + self.len
+    }
+}
+
+impl Memmap {
+    pub fn iter(&self) -> core::slice::Iter<MemmapEntry> {
+        self.entries[0..self.entry_count].iter()
+    }
 }
 
 //impl Default for Entry {

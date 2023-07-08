@@ -52,6 +52,17 @@ name = "kernel-cpu-impl"
 version = "0.1.0"
 
 [[package]]
+name = "kernel-paging"
+version = "0.1.0"
+dependencies = [
+ "kernel-paging-impl",
+]
+
+[[package]]
+name = "kernel-paging-impl"
+version = "0.1.0"
+
+[[package]]
 name = "lazy_static"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -88,6 +99,7 @@ dependencies = [
  "kernel-boot-interface",
  "kernel-build",
  "kernel-cpu",
+ "kernel-paging",
  "metamorphoses",
  "spin 0.9.8",
 ]
