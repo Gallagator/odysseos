@@ -4,17 +4,18 @@
 #![test_runner(kernel_test::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-pub mod bitmap;
-
-#[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _kernel_start() -> ! {
     test_main();
     kernel_cpu::hcf();
 }
 
-#[cfg(test)]
+#[test_case]
+fn arch_boot() {
+    let _boot_info = kernel_boot::arch_init();
+}
+
 #[panic_handler]
-pub fn test_panic(_info: &core::panic::PanicInfo) -> ! {
-    kernel_cpu::hcf();
+pub fn test_panic(info: &core::panic::PanicInfo) -> ! {
+    kernel_test::panic(info);
 }

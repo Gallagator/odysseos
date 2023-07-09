@@ -125,7 +125,7 @@ impl BitmapRange {
 mod tests {
     use super::*;
 
-    #[test]
+    #[test_case]
     fn alloc_one() {
         let mut buf = [0u64; 10];
         let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
@@ -133,7 +133,7 @@ mod tests {
         assert_eq!(bmap.get(0), true);
     }
 
-    #[test]
+    #[test_case]
     fn alloc_two() {
         let mut buf = [0u64; 10];
         let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
@@ -143,7 +143,7 @@ mod tests {
         assert_eq!(bmap.get(1), true);
     }
 
-    #[test]
+    #[test_case]
     fn alloc_all() {
         let mut buf = [0u64; 10];
         let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
@@ -155,7 +155,7 @@ mod tests {
         }
     }
 
-    #[test]
+    #[test_case]
     fn alloc_big() {
         let mut buf = [0u64; 10];
         let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);

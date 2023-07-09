@@ -7,6 +7,10 @@ all:
 	cargo build --target x86_64-unknown-none
 	cp target/x86_64-unknown-none/debug/odysseos kernel.elf
 
+.PHONY: run
+run: all
+	cd .. ; make run
+
 # Remove object files and the final executable.
 .PHONY: clean
 clean:

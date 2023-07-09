@@ -1,12 +1,17 @@
 #![no_std]
-#![cfg_attr(not(test), no_main)]
+#![no_main]
+#![feature(custom_test_frameworks)]
+#![test_runner(kernel_test::test_runner)]
+#![reexport_test_harness_main = "test_main"]
 
 mod memory;
+mod panic;
 mod synch;
 
 use kernel_boot;
 use kernel_boot_interface;
 use kernel_cpu;
+use kernel_log::kprintln;
 use memory::palloc;
 
 unsafe fn put_white(x: u64, y: u64, binfo: &kernel_boot_interface::BootInfo) {
@@ -15,8 +20,9 @@ unsafe fn put_white(x: u64, y: u64, binfo: &kernel_boot_interface::BootInfo) {
     *(ptr.offset(offset as isize) as *mut u32) = 0xffff_ffff;
 }
 
+#[cfg(not(test))]
 #[no_mangle]
-pub unsafe extern "C" fn _kernel_start() -> ! {
+pub extern "C" fn _kernel_start() -> ! {
     let boot_info = kernel_boot::arch_init();
 
     palloc::init(&boot_info.hhdm, &boot_info.memmap);
@@ -24,17 +30,20 @@ pub unsafe extern "C" fn _kernel_start() -> ! {
     let a = palloc::get_page();
     let b = palloc::get_page();
 
+    kprintln!("a has address: {:?}\n and here is b's {:?}", a, b);
     for i in 0..100 {
-        put_white(i, i, &boot_info);
+        unsafe { put_white(i, i, &boot_info) };
     }
-    kernel_cpu::hcf();
-}
 
-#[cfg(not(test))]
-#[panic_handler]
-fn rust_panic(_info: &core::panic::PanicInfo) -> ! {
+    #[cfg(test)]
+    test_main();
+
     kernel_cpu::hcf();
 }
 
 #[cfg(test)]
-fn main() {}
+#[no_mangle]
+pub extern "C" fn _kernel_start() -> ! {
+    test_main();
+    kernel_cpu::hcf();
+}

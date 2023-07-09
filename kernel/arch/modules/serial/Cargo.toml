@@ -1,0 +1,10 @@
+[package]
+name = "kernel-serial"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+[target.'cfg(target_arch = "x86_64")'.dependencies]
+kernel-serial-impl = { path = "../../x86_64/serial" }
