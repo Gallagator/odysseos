@@ -4,13 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+# External libs
 spin = "0.9"
 
-metamorphoses = {path = "lib/metamorphoses/"}
+# Arch
 kernel-cpu = {path = "arch/modules/cpu"}
 kernel-boot = {path = "arch/modules/boot"}
 kernel-paging = {path = "arch/modules/paging"}
+
+# Lib
+metamorphoses = {path = "lib/metamorphoses/"}
 kernel-boot-interface = {path = "lib/kernel-boot-interface"}
+kernel-test = {path = "lib/kernel-test"}
+kernel-log = {path = "lib/kernel-log"}
 
 [profile.dev]
 opt-level = 3

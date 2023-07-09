@@ -1,19 +1,11 @@
 [package]
-name = "metamorphoses"
+name = "kernel-test"
 version = "0.1.0"
 edition = "2021"
-
-[profile.dev]
-build = "build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
-[dev-dependencies]
+kernel-log= {path = "../kernel-log/"}
 kernel-cpu = {path = "../../arch/modules/cpu/"}
-kernel-test = {path = "../../lib/kernel-test/"}
-
-[build-dependencies]
-kernel-build = {path = "../../arch/modules/build/"}
-
+kernel-shutdown = {path = "../../arch/modules/shutdown/"}

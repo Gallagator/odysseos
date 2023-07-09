@@ -1,0 +1,45 @@
+#!/usr/bin/python3
+
+import argparse
+import os
+from subprocess import DEVNULL, STDOUT, check_call
+import pathlib
+
+
+def make_iso(filename):
+
+    path = pathlib.Path(__file__).parent.parent.absolute()
+    check_call(["mkdir", "-p", "iso_root"], stdout=DEVNULL, stderr=STDOUT)
+    check_call("cp {f} kernel.elf".format(
+        f=filename).split(), stdout=DEVNULL, stderr=STDOUT)
+    check_call("cp kernel.elf \
+                    {path}/limine.cfg {path}/limine/limine.sys {path}/limine/limine-cd.bin \
+                    {path}/limine/limine-cd-efi.bin iso_root/".format(path=path).split(), stdout=DEVNULL, stderr=STDOUT)
+    check_call(" xorriso -as mkisofs -b limine-cd.bin \
+                     -no-emul-boot -boot-load-size 4 -boot-info-table \
+                     --efi-boot limine-cd-efi.bin \
+                     -efi-boot-part --efi-boot-image --protective-msdos-label \
+                     iso_root -o odysseos.iso".split(), stdout=DEVNULL, stderr=STDOUT)
+    check_call(
+        "{path}/limine/limine-deploy odysseos.iso".format(path=path).split(), stdout=DEVNULL, stderr=STDOUT)
+    check_call("rm -rf iso_root".split(), stdout=DEVNULL, stderr=STDOUT)
+
+
+def run_iso():
+    os.system(
+        "qemu-system-x86_64 -M q35 -m 2G -cdrom odysseos.iso -boot d -serial stdio \
+        -device isa-debug-exit,iobase=0xf4,iosize=0x04 -display none")
+    check_call("rm -f odysseos.iso".split(), stdout=DEVNULL, stderr=STDOUT)
+
+
+parser = argparse.ArgumentParser(
+    prog='limine_x86_64',
+    description='Runs a limine compliant kernel on x86'
+)
+
+parser.add_argument('filename')
+
+args = parser.parse_args()
+
+make_iso(args.filename)
+run_iso()

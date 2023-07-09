@@ -1,0 +1,2 @@
+[target.'cfg(target_arch = "x86_64")']
+runner = "limine_x86_64_runner"

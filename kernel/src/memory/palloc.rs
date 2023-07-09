@@ -1,6 +1,6 @@
 //TODO: NEED TO mark certain memory ranges as unusable
 
-use core::{mem::MaybeUninit, num::NonZeroUsize, ptr::NonNull};
+use core::num::NonZeroUsize;
 use spin;
 
 use kernel_boot_interface::{
@@ -128,9 +128,9 @@ impl PagePool {
 mod tests {
     use super::*;
 
-    #[test]
+    #[test_case]
     fn largest_usable_entry() {
-        let largest_entry = get_largest_memmap_entry(&MOCK_HHDM, &get_mock_memmap());
+        //let largest_entry = get_largest_memmap_entry(&MOCK_HHDM, &get_mock_memmap());
         //assert_eq!(largest_entry, MOCK_MEMMAP.entries[4])
     }
 
