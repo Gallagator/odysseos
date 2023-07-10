@@ -9,3 +9,5 @@ edition = "2021"
 kernel-log= {path = "../kernel-log/"}
 kernel-cpu = {path = "../../arch/modules/cpu/"}
 kernel-shutdown = {path = "../../arch/modules/shutdown/"}
+kernel-boot = {path = "../../arch/modules/boot/"}
+kernel-boot-interface = {path = "../kernel-boot-interface/"}

@@ -13,7 +13,7 @@ pub extern "C" fn _kernel_start() -> ! {
 }
 
 #[test_case]
-fn arch_boot(boot_info: &BootInfo) {}
+fn palloc(boot_info: &BootInfo) {}
 
 #[panic_handler]
 pub fn test_panic(info: &core::panic::PanicInfo) -> ! {

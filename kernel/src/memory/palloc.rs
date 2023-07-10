@@ -1,5 +1,3 @@
-//TODO: NEED TO mark certain memory ranges as unusable
-
 use core::num::NonZeroUsize;
 use spin;
 
@@ -128,109 +126,22 @@ impl PagePool {
 mod tests {
     use super::*;
 
+    use kernel_boot_interface::BootInfo;
+
     #[test_case]
-    fn largest_usable_entry() {
-        //let largest_entry = get_largest_memmap_entry(&MOCK_HHDM, &get_mock_memmap());
-        //assert_eq!(largest_entry, MOCK_MEMMAP.entries[4])
+    fn largest_usable_entry(boot_info: &BootInfo) {
+        let entry = get_largest_memmap_entry(&boot_info.hhdm, &boot_info.memmap);
+        let hhdm_size = usize::MAX - boot_info.hhdm.base;
+        assert!(entry.base < hhdm_size);
+        assert!(entry.typ == MemType::Usable);
     }
 
-    const MOCK_HHDM: BootHhdm = BootHhdm {
-        base: 18446603336221196288,
-    };
+    #[test_case]
+    fn largest_usable_entry(boot_info: &BootInfo) {
+        assert!(get_num_memory_pages(&boot_info.memmap) > 0);
+    }
 
-    fn get_mock_memmap() -> Memmap {
-        let mut entries: [MemmapEntry; 256] = unsafe { core::mem::zeroed() };
-        let actual_entries = [
-            MemmapEntry {
-                base: 4096,
-                len: 331776,
-                typ: kernel_boot_interface::memmap::MemType::BootloaderReclaimable,
-            },
-            MemmapEntry {
-                base: 335872,
-                len: 315392,
-                typ: kernel_boot_interface::memmap::MemType::Usable,
-            },
-            MemmapEntry {
-                base: 654336,
-                len: 1024,
-                typ: kernel_boot_interface::memmap::MemType::Reserved,
-            },
-            MemmapEntry {
-                base: 983040,
-                len: 65536,
-                typ: kernel_boot_interface::memmap::MemType::Reserved,
-            },
-            MemmapEntry {
-                base: 1048576,
-                len: 2141167616,
-                typ: kernel_boot_interface::memmap::MemType::Usable,
-            },
-            MemmapEntry {
-                base: 2142216192,
-                len: 16384,
-                typ: kernel_boot_interface::memmap::MemType::BootloaderReclaimable,
-            },
-            MemmapEntry {
-                base: 2142232576,
-                len: 28672,
-                typ: kernel_boot_interface::memmap::MemType::Reserved,
-            },
-            MemmapEntry {
-                base: 2142261248,
-                len: 1265664,
-                typ: kernel_boot_interface::memmap::MemType::BootloaderReclaimable,
-            },
-            MemmapEntry {
-                base: 2143526912,
-                len: 4096,
-                typ: kernel_boot_interface::memmap::MemType::Usable,
-            },
-            MemmapEntry {
-                base: 2143531008,
-                len: 4096,
-                typ: kernel_boot_interface::memmap::MemType::BootloaderReclaimable,
-            },
-            MemmapEntry {
-                base: 2143535104,
-                len: 3215360,
-                typ: kernel_boot_interface::memmap::MemType::Usable,
-            },
-            MemmapEntry {
-                base: 2146750464,
-                len: 598016,
-                typ: kernel_boot_interface::memmap::MemType::BootloaderReclaimable,
-            },
-            MemmapEntry {
-                base: 2147348480,
-                len: 135168,
-                typ: kernel_boot_interface::memmap::MemType::Reserved,
-            },
-            MemmapEntry {
-                base: 2952790016,
-                len: 268435456,
-                typ: kernel_boot_interface::memmap::MemType::Reserved,
-            },
-            MemmapEntry {
-                base: 4244635648,
-                len: 3145728,
-                typ: kernel_boot_interface::memmap::MemType::Reserved,
-            },
-            MemmapEntry {
-                base: 4275159040,
-                len: 16384,
-                typ: kernel_boot_interface::memmap::MemType::Reserved,
-            },
-            MemmapEntry {
-                base: 4294705152,
-                len: 262144,
-                typ: kernel_boot_interface::memmap::MemType::Reserved,
-            },
-        ];
-        entries.copy_from_slice(&actual_entries);
-        Memmap {
-            entries,
-            entry_count: 17,
-        }
+    fn test_initialise() {
+        //init(&boot_info.hhdm, &boot_info.memmap);
     }
 }

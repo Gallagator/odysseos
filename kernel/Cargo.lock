@@ -115,6 +115,8 @@ dependencies = [
 name = "kernel-test"
 version = "0.1.0"
 dependencies = [
+ "kernel-boot",
+ "kernel-boot-interface",
  "kernel-cpu",
  "kernel-log",
  "kernel-shutdown",
