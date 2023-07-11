@@ -4,18 +4,13 @@
 #![test_runner(kernel_test::test_runner)]
 #![reexport_test_harness_main = "test_main"]
 
-use kernel_boot_interface::BootInfo;
+pub mod memory;
+mod panic;
+pub mod synch;
 
+#[cfg(test)]
 #[no_mangle]
 pub extern "C" fn _kernel_start() -> ! {
     test_main();
     kernel_cpu::hcf();
-}
-
-#[test_case]
-fn palloc(boot_info: &BootInfo) {}
-
-#[panic_handler]
-pub fn test_panic(info: &core::panic::PanicInfo) -> ! {
-    kernel_test::panic(info);
 }

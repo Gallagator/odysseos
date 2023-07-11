@@ -22,7 +22,7 @@ impl<'a> Bitmap<'a> {
     }
 
     pub fn fill(&mut self, is_set: bool) {
-        let value = if is_set { 1 } else { 0 };
+        let value = if is_set { !0u64 } else { 0 };
         self.bits.fill(value);
     }
     /// Gets bit at idx
@@ -123,10 +123,12 @@ impl BitmapRange {
 
 #[cfg(test)]
 mod tests {
+    use kernel_boot_interface::BootInfo;
+
     use super::*;
 
     #[test_case]
-    fn alloc_one() {
+    fn alloc_one(_boot_info: &BootInfo) {
         let mut buf = [0u64; 10];
         let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
         assert_eq!(bmap.find_and_flip(1, false), Some(0));
@@ -134,7 +136,7 @@ mod tests {
     }
 
     #[test_case]
-    fn alloc_two() {
+    fn alloc_two(_boot_info: &BootInfo) {
         let mut buf = [0u64; 10];
         let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
         assert_eq!(bmap.find_and_flip(1, false), Some(0));
@@ -144,7 +146,7 @@ mod tests {
     }
 
     #[test_case]
-    fn alloc_all() {
+    fn alloc_all(_boot_info: &BootInfo) {
         let mut buf = [0u64; 10];
         let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
         for i in 0..(bmap.len()) {
@@ -156,7 +158,7 @@ mod tests {
     }
 
     #[test_case]
-    fn alloc_big() {
+    fn alloc_big(_boot_info: &BootInfo) {
         let mut buf = [0u64; 10];
         let mut bmap = Bitmap::new(&mut buf, 10 * WORD_SIZE_BITS);
         assert_eq!(bmap.find_and_flip(64 * 10, false), Some(0));

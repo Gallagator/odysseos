@@ -1,7 +1,7 @@
 pub const MAX_MEM_REGIONS: usize = 256;
 
 #[derive(PartialEq, Eq, Clone, Copy)]
-pub enum MemType {
+pub enum BootMemType {
     Usable,
     Reserved,
     AcpiReclaimable,
@@ -13,7 +13,7 @@ pub enum MemType {
 pub struct MemmapEntry {
     pub base: usize,
     pub len: usize,
-    pub typ: MemType,
+    pub typ: BootMemType,
 }
 
 pub struct Memmap {
@@ -22,6 +22,7 @@ pub struct Memmap {
 }
 
 impl MemmapEntry {
+    /// Returns range exclusive
     pub fn end(&self) -> usize {
         self.base + self.len
     }

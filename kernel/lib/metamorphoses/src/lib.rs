@@ -15,6 +15,6 @@ pub extern "C" fn _kernel_start() -> ! {
 
 #[cfg(test)]
 #[panic_handler]
-pub fn test_panic(_info: &core::panic::PanicInfo) -> ! {
-    kernel_cpu::hcf();
+pub fn test_panic(info: &core::panic::PanicInfo) -> ! {
+    kernel_test::panic(info)
 }

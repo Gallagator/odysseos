@@ -1,28 +1,18 @@
-[package]
-name = "odysseos"
-version = "0.1.0"
-edition = "2021"
+[workspace]
 
-[dependencies]
-# External libs
-spin = "0.9"
+resolver = "2"
 
-# Arch
-kernel-cpu = {path = "arch/modules/cpu"}
-kernel-boot = {path = "arch/modules/boot"}
-kernel-paging = {path = "arch/modules/paging"}
+members = [
+"arch/modules/boot",
+"arch/modules/cpu",
+"arch/modules/paging",
+"arch/modules/serial",
+"arch/modules/shutdown",
+"lib/kernel-boot-interface",
+"lib/kernel-log",
+"lib/kernel-test",
+"lib/metamorphoses",
+"lib/teensy-std",
+"kernel",
+]
 
-# Lib
-metamorphoses = {path = "lib/metamorphoses/"}
-kernel-boot-interface = {path = "lib/kernel-boot-interface"}
-kernel-test = {path = "lib/kernel-test"}
-kernel-log = {path = "lib/kernel-log"}
-
-[profile.dev]
-opt-level = 3
-
-[profile.release]
-lto = "fat"
-
-[build-dependencies]
-kernel-build = { path = "arch/modules/build" }

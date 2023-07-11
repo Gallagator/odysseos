@@ -1,8 +1,11 @@
 use kernel_cpu;
+use kernel_log::kprintln;
 
 #[cfg(not(test))]
 #[panic_handler]
-fn rust_panic(_info: &core::panic::PanicInfo) -> ! {
+fn rust_panic(info: &core::panic::PanicInfo) -> ! {
+    kprintln!("{:?}", info);
+    kernel_shutdown::shutdown(kernel_shutdown::ShutdownExitCode::Failed);
     kernel_cpu::hcf();
 }
 

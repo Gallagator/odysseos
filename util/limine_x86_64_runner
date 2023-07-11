@@ -23,6 +23,7 @@ def make_iso(filename):
     check_call(
         "{path}/limine/limine-deploy odysseos.iso".format(path=path).split(), stdout=DEVNULL, stderr=STDOUT)
     check_call("rm -rf iso_root".split(), stdout=DEVNULL, stderr=STDOUT)
+    # check_call("rm kernel.elf", stdout=DEVNULL, stderr=STDOUT)
 
 
 def run_iso():

@@ -1,6 +1,7 @@
 use std::{fs, path::Path};
 
 pub fn build_main() {
+    println!("cargo:warning=file: {:?}", Path::new(file!()));
     let mut linker_path = fs::canonicalize(Path::new(file!())).unwrap();
 
     linker_path.pop();

@@ -2,9 +2,7 @@
 name = "metamorphoses"
 version = "0.1.0"
 edition = "2021"
-
-[profile.dev]
-build = "build.rs"
+build = "../../build.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -12,8 +10,8 @@ build = "build.rs"
 
 [dev-dependencies]
 kernel-cpu = {path = "../../arch/modules/cpu/"}
-kernel-test = {path = "../../lib/kernel-test/"}
+kernel-test = {path = "../kernel-test/"}
+kernel-boot-interface = {path = "../kernel-boot-interface/"}
 
 [build-dependencies]
-kernel-build = {path = "../../arch/modules/build/"}
-
+build-target = "0.4.0"

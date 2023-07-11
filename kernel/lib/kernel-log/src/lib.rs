@@ -1,4 +1,5 @@
 #![no_std]
+#![no_main]
 
 #[cfg(debug_assertions)]
 pub use kernel_serial::serial_println;
@@ -18,3 +19,5 @@ macro_rules! kprintln {
     ($fmt:expr, $($arg:tt)*) => (kernel_log::kprint!(
         concat!($fmt, "\n"), $($arg)*));
 }
+
+

@@ -1,0 +1,25 @@
+[package]
+name = "odysseos"
+version = "0.1.0"
+edition = "2021"
+build = "../build.rs"
+
+[dependencies]
+# External libs
+spin = "0.9"
+
+# Arch
+kernel-cpu = {path = "../arch/modules/cpu"}
+kernel-boot = {path = "../arch/modules/boot"}
+kernel-paging = {path = "../arch/modules/paging"}
+kernel-shutdown = {path = "../arch/modules/shutdown"}
+
+# Lib
+metamorphoses = {path = "../lib/metamorphoses/"}
+kernel-boot-interface = {path = "../lib/kernel-boot-interface"}
+kernel-test = {path = "../lib/kernel-test"}
+kernel-log = {path = "../lib/kernel-log"}
+teensy-std = {path = "../lib/teensy-std"}
+
+[build-dependencies]
+build-target = "0.4.0"

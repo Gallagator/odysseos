@@ -77,14 +77,14 @@ fn get_hhdm() -> hhdm::BootHhdm {
 
 fn convert_memmap_entry(entry: &limine::MemmapEntry) -> memmap::MemmapEntry {
     let typ = match entry.typ {
-        limine::MemoryMapEntryType::Usable => memmap::MemType::Usable,
-        limine::MemoryMapEntryType::Reserved => memmap::MemType::Reserved,
-        limine::MemoryMapEntryType::AcpiReclaimable => memmap::MemType::AcpiReclaimable,
-        limine::MemoryMapEntryType::AcpiNvs => memmap::MemType::AcpiNvs,
-        limine::MemoryMapEntryType::BadMemory => memmap::MemType::Reserved,
-        limine::MemoryMapEntryType::BootloaderReclaimable => memmap::MemType::BootloaderReclaimable,
-        limine::MemoryMapEntryType::KernelAndModules => memmap::MemType::Reserved,
-        limine::MemoryMapEntryType::Framebuffer => memmap::MemType::Reserved,
+        limine::MemoryMapEntryType::Usable => memmap::BootMemType::Usable,
+        limine::MemoryMapEntryType::Reserved => memmap::BootMemType::Reserved,
+        limine::MemoryMapEntryType::AcpiReclaimable => memmap::BootMemType::AcpiReclaimable,
+        limine::MemoryMapEntryType::AcpiNvs => memmap::BootMemType::AcpiNvs,
+        limine::MemoryMapEntryType::BadMemory => memmap::BootMemType::Reserved,
+        limine::MemoryMapEntryType::BootloaderReclaimable => memmap::BootMemType::BootloaderReclaimable,
+        limine::MemoryMapEntryType::KernelAndModules => memmap::BootMemType::Reserved,
+        limine::MemoryMapEntryType::Framebuffer => memmap::BootMemType::Reserved,
     };
 
     memmap::MemmapEntry {
